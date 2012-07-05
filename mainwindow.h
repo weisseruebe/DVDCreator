@@ -17,6 +17,8 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+    void handleFileChanges(QString path);
+
 
 private:
     Ui::MainWindow *ui;

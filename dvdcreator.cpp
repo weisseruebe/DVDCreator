@@ -6,7 +6,7 @@ DVDCreator::DVDCreator(QObject *parent) :
     QObject(parent)
 {
     watchfolder = "C:/Dokumente und Einstellungen/andreas/Desktop/rocketDVDFiles/watchfolder";
-    avsPath = "C:/Dokumente und Einstellungen/andreas/Desktop/rocketDVDFiles/direct.avs";
+    avsPath = "C:\\Dokumente und Einstellungen\\andreas\\Desktop\\rocketDVDFiles\\direct.avs";
     baseProjectPath = "C:/Dokumente und Einstellungen/andreas/Desktop/rocketDVDFiles/test.prj";
     menuTheme = "C:/Dokumente und Einstellungen/andreas/Desktop/rocketDVDFiles/mwa.menu";
 

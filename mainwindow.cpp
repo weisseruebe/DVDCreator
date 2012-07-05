@@ -9,10 +9,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    QFileSystemWatcher* watchFolderWatcher = new QFileSystemWatcher();
-    watchFolderWatcher->addPath("D:/RocketDVD/watchfolder/");
-    connect(watchFolderWatcher,SIGNAL(fileChanged(QString)),this,SLOT(handleFileChanges(QString)));
-    connect(watchFolderWatcher,SIGNAL(directoryChanged(QString)),this,SLOT(handleFileChanges(QString)));
+    creator = new DVDCreator();
+    connect(creator,SIGNAL(running(QString)),this,SLOT(showRunning(QString)));
+    connect(creator,SIGNAL(done(QString)),this,SLOT(showDone(QString)));
 
 }
 
@@ -23,11 +22,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    DVDCreator creator;
-    creator.startDVDJob();
+    creator->startDVDJob();
 }
 
-void MainWindow::handleFileChanges(QString path){
-    qDebug("HUUUU");
-    qDebug(path.toAscii());
+void MainWindow::showRunning(QString id){
+    ui->progressBar->setMaximum(0);
+}
+
+void MainWindow::showDone(QString id){
+    ui->progressBar->setMaximum(1);
+    ui->progressBar->setValue(1);
+}
+
+void MainWindow::showError(QString msg){
+
 }

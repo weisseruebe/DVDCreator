@@ -4,6 +4,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QStringList>
+#include <QFile>
 #include "dvdcreator.h"
 
 DVDCreator::DVDCreator(QObject *parent) :
@@ -14,7 +15,7 @@ DVDCreator::DVDCreator(QObject *parent) :
     baseProjectPath = "D:/RocketDVD/test.prj";
     menuTheme = "C:/Programme/Digital Media Applications/RocketDVD Professional Trial/Menu/CORPORATE - insert your own titles_PAL_MWA.menu";
 
-   QFileSystemWatcher* watchFolderWatcher = new QFileSystemWatcher(this);
+    watchFolderWatcher = new QFileSystemWatcher(this);
     watchFolderWatcher->addPath(watchfolder);
 
     connect(watchFolderWatcher,SIGNAL(fileChanged(QString)),this,SLOT(handleFileChanges(QString)));
@@ -46,11 +47,11 @@ void DVDCreator::createJobFile(){
     file.close();
 }
 
-void DVDCreator::createAviSynthFile(bool resize = true, bool changeFps = true){
+void DVDCreator::createAviSynthFile(QString videofile, bool resize = true, bool changeFps = true){
     QFile file(avsPath);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
-    out<<"DirectShowSource(\"Untitled 05.avi\")\n";
+    out<<"DirectShowSource(\""<<videofile<<"\")\n";
     if (changeFps){
         out<<"AssumeFPS(25)\n";
     }
@@ -61,11 +62,33 @@ void DVDCreator::createAviSynthFile(bool resize = true, bool changeFps = true){
 }
 
 void DVDCreator::handleFileChanges(QString path){
-    qDebug("HAAAAAA");
     qDebug(path.toAscii());
+    if (QFile(watchfolder+"out.running").exists()){
+        qDebug("Running");
+        emit running("out");
+    }
+    if (QFile(watchfolder+"out.err").exists()){
+        qDebug("Error");
+        QFile file(watchfolder+"out.err");
+        if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
+            QTextStream in(&file);
+            QString line = in.readLine();
+            while (!line.isNull()) {
+                if (line.startsWith(";")){
+                    qDebug()<<line;
+                    emit error(line);
+                }
+                line = in.readLine();
+            }
+        }
+    }
+    if (QFile(watchfolder+"out.done").exists()){
+        qDebug("Done");
+        emit done("out");
+    }
 }
 
 void DVDCreator::startDVDJob(){
-    createAviSynthFile();
+    createAviSynthFile("D:/RocketDVD/DSC_0453.AVI");
     createJobFile();
 }

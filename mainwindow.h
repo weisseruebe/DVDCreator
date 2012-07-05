@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "dvdcreator.h"
 
 namespace Ui {
     class MainWindow;
@@ -17,11 +18,14 @@ public:
 
 private slots:
     void on_pushButton_clicked();
-    void handleFileChanges(QString path);
+    void showRunning(QString id);
+    void showDone(QString id);
+    void showError(QString msg);
 
 
 private:
     Ui::MainWindow *ui;
+    DVDCreator* creator;
 };
 
 #endif // MAINWINDOW_H

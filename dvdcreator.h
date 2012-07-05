@@ -11,10 +11,13 @@ class DVDCreator : public QObject
 public:
     explicit DVDCreator(QObject *parent = 0);
     void createJobFile();
-    void createAviSynthFile(bool resize, bool changeFps);
+    void createAviSynthFile(QString videofile, bool resize, bool changeFps);
     void startDVDJob();
 
 signals:
+    void running(QString id);
+    void done(QString id);
+    void error(QString msg);
 
 public slots:
     void handleFileChanges(QString path);
@@ -24,7 +27,7 @@ private:
     QString baseProjectPath;
     QString avsPath;
     QString menuTheme;
-    //QFileSystemWatcher* watchFolderWatcher;
+    QFileSystemWatcher* watchFolderWatcher;
 };
 
 #endif // DVDCREATOR_H

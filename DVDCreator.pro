@@ -12,10 +12,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    dvdcreator.cpp
+    dvdcreator.cpp \
+    videofile.cpp
 
 HEADERS  += mainwindow.h \
-    dvdcreator.h
+    dvdcreator.h \
+    videofile.h
 
 FORMS    += mainwindow.ui
 

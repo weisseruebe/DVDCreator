@@ -6,6 +6,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dvdcreator.h"
+#include "videofile.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -27,7 +28,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    creator->startDVDJob(ui->lineEdit->text(),fileName);
+    QHash<QString,QString> parameters;
+    parameters.insert("[[Company Name]]", "MWA");
+    parameters.insert("[[Company Website]]", "www.mwa.com");
+    parameters.insert("[[Company Telephone Number]]", "(030)123456");
+
+    creator->startDVDJob(ui->lineEdit->text(),"Ausflug","Süden",fileName,QTime(0,1), parameters);
 }
 
 void MainWindow::showRunning(QString id){

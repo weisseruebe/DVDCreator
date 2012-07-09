@@ -47,7 +47,7 @@ void DVDCreator::createJobFile(QString id, QString title, QString subtitle, QTim
     out<<"MenuTheme="<<menuTheme<<endl;
     out<<"UsePre-EncodedFiles=yes"<<endl;
     out<<"Pre-EncodedFileType = FilesToEncode"<<endl;
-    out<<"Pre-CapturedFile=VIDEO:"<<avsPath<<",LENGTH:"<<length.toString("h:m:s")<<",TITLE:Hoppla"<<endl;
+    out<<"Pre-CapturedFile=VIDEO:"<<avsPath<<",LENGTH:"<<length.toString("h:m:s")<<",TITLE:Demo"<<endl;
 
     file.close();
 }
@@ -56,15 +56,15 @@ void DVDCreator::createAviSynthFile(QString videofile, bool resize = true, bool 
     QFile file(avsPath);
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
-    out<<"DirectShowSource(\""<<videofile<<"\")\n";
+    out<<"DirectShowSource(\""<<videofile<<"\")" << endl;
     if (changeFps){
-        out<<"AssumeFPS(25)\n";
+        out<<"AssumeFPS(25)"<<endl;
     }
     if (crop){
-        out << "Crop(160, 0, 960, 720)";
+        out << "Crop(160, 0, 960, 720)" << endl;
     }
     if (resize){
-        out<<"LanczosResize(720, 576)\n";
+        out<<"LanczosResize(720, 576)" << endl;
     }
     file.close();
 }
@@ -75,11 +75,11 @@ void DVDCreator::setMenuFile(QString path){
 }
 
 void DVDCreator::handleFileChanges(QString path){
-    if (QFile(watchfolder+jobFileName+".running").exists()){
+    if (QFile(path+jobFileName+".running").exists()){
         emit running(jobFileName);
     }
-    if (QFile(watchfolder+jobFileName+".err").exists()){
-        QFile file(watchfolder+jobFileName+".err");
+    if (QFile(path+jobFileName+".err").exists()){
+        QFile file(path+jobFileName+".err");
         QString errorMessage;
         if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
             QTextStream in(&file);
@@ -93,16 +93,12 @@ void DVDCreator::handleFileChanges(QString path){
             emit error(errorMessage);
         }
     }
-    if (QFile(watchfolder+jobFileName+".done").exists()){
+    if (QFile(path+jobFileName+".done").exists()){
         emit done(jobFileName);
     }
 }
 
-void DVDCreator::startDVDJob(QString id, QString videoFile){
+void DVDCreator::startDVDJob(QString id, QString title, QString subtitle, QString videoFile, QTime length, QHash<QString, QString> parameters){
     createAviSynthFile(videoFile);
-    QHash<QString,QString> parameters;
-    parameters.insert("[[Company Name]]", "Rumpelkammer");
-    parameters.insert("mytext", "Es war krass warm!");
-
-    createJobFile(id, "MWA","brennt",QTime(0,1,10),parameters);
+    createJobFile(id, title, subtitle, length, parameters);
 }

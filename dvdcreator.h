@@ -2,7 +2,9 @@
 #define DVDCREATOR_H
 
 #include <QObject>
+#include <QTime>
 #include <QFileSystemWatcher>
+#include <QHash>
 
 class DVDCreator : public QObject
 {
@@ -10,9 +12,9 @@ class DVDCreator : public QObject
 
 public:
     explicit DVDCreator(QObject *parent = 0);
-    void createJobFile();
-    void createAviSynthFile(QString videofile, bool resize, bool changeFps);
-    void startDVDJob();
+    void createJobFile(QString id, QString title, QString subtitle, QTime length, QHash<QString, QString> variables);
+    void createAviSynthFile(QString videofile, bool resize, bool crop, bool changeFps);
+    void startDVDJob(QString id, QString videoFile);
 
 signals:
     void running(QString id);
@@ -21,12 +23,14 @@ signals:
 
 public slots:
     void handleFileChanges(QString path);
+    void setMenuFile(QString path);
 
 private:
     QString watchfolder;
     QString baseProjectPath;
     QString avsPath;
     QString menuTheme;
+    QString jobFileName;
     QFileSystemWatcher* watchFolderWatcher;
 };
 

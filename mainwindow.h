@@ -18,14 +18,18 @@ public:
 
 private slots:
     void on_pushButton_clicked();
+    void on_pushButton_2_clicked();
+
     void showRunning(QString id);
     void showDone(QString id);
     void showError(QString msg);
 
+    void on_pushButtonMenu_clicked();
 
 private:
     Ui::MainWindow *ui;
     DVDCreator* creator;
+    QString fileName;
 };
 
 #endif // MAINWINDOW_H

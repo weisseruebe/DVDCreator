@@ -1,4 +1,7 @@
 #include <QFileSystemWatcher>
+#include <QMessageBox>
+#include <QFileDialog>
+
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -12,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     creator = new DVDCreator();
     connect(creator,SIGNAL(running(QString)),this,SLOT(showRunning(QString)));
     connect(creator,SIGNAL(done(QString)),this,SLOT(showDone(QString)));
+    connect(creator,SIGNAL(error(QString)),this,SLOT(showError(QString)));
+    ui->pushButton->setEnabled(false);
 
 }
 
@@ -22,7 +27,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
-    creator->startDVDJob();
+    creator->startDVDJob(ui->lineEdit->text(),fileName);
 }
 
 void MainWindow::showRunning(QString id){
@@ -35,5 +40,21 @@ void MainWindow::showDone(QString id){
 }
 
 void MainWindow::showError(QString msg){
+    QMessageBox msgBox;
+    msgBox.setText("There was an Error: "+msg);
+    msgBox.exec();
+}
 
+void MainWindow::on_pushButton_2_clicked()
+{
+    fileName = QFileDialog::getOpenFileName(this, tr("Open AVI"), "/", tr("AVI Files (*.avi)"));
+    ui->labelAviFile->setText(fileName);
+    ui->pushButton->setEnabled(true);
+}
+
+void MainWindow::on_pushButtonMenu_clicked()
+{
+    QString menufile = QFileDialog::getOpenFileName(this, tr("Open Menu"), "/", tr("Menu Files (*.menu)"));
+    ui->labelMenu->setText(menufile);
+    creator->setMenuFile(menufile);
 }

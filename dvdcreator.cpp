@@ -79,9 +79,16 @@ void DVDCreator::setMenuFile(QString menuThemePath){
 }
 
 void DVDCreator::handleFileChanges(QString path){
+
     if (QFile(path+m_jobFileName+".running").exists()){
         emit running(m_jobFileName);
     }
+
+    if (QFile(path+m_jobFileName+".done").exists()){
+        emit done(m_jobFileName);
+    }
+
+    //Very simple and basic reading out of commented lines
     if (QFile(path+m_jobFileName+".err").exists()){
         QFile file(path+m_jobFileName+".err");
         QString errorMessage;
@@ -95,10 +102,8 @@ void DVDCreator::handleFileChanges(QString path){
                 line = in.readLine();
             }
             emit error(errorMessage);
+            file.close();
         }
-    }
-    if (QFile(path+m_jobFileName+".done").exists()){
-        emit done(m_jobFileName);
     }
 }
 

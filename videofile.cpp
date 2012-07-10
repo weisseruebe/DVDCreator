@@ -8,7 +8,7 @@ VideoFile::VideoFile(QString path, QString name, QTime length, bool changeFps, b
 
 
 VideoFile::VideoFile(QString path, QString name, QTime length) :
-    m_path(path),m_name(name),m_length(length),m_changeFps(true),m_resize(true),m_crop(true)
+    m_path(path),m_name(name),m_length(length),m_changeFps(true),m_resize(true),m_crop(false)
 {
 
 }

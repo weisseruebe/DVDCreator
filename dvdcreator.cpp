@@ -5,12 +5,16 @@
 #include <QDebug>
 #include <QStringList>
 #include <QFile>
+#include <QDir>
 #include <QHash>
 #include "dvdcreator.h"
 
 DVDCreator::DVDCreator(QString watchfolder, QString avsFolder, QString baseProject, QString menuTheme, QObject *parent) :
-    QObject(parent),m_watchfolder(watchfolder),m_avsFolder(avsFolder),m_baseProjectPath(baseProject),m_menuTheme(menuTheme),m_jobFileName("out")
+    QObject(parent),m_watchfolder(watchfolder),m_baseProjectPath(baseProject),m_menuTheme(menuTheme),m_jobFileName("out")
 {
+    m_avsFolder = QDir::toNativeSeparators(avsFolder);
+    qDebug() << m_avsFolder;
+
     watchFolderWatcher = new QFileSystemWatcher(this);
     watchFolderWatcher->addPath(watchfolder);
 
@@ -28,7 +32,7 @@ void DVDCreator::startDVDJob(QString id, QString title, QString subtitle, QList<
     out<< "JobTemplate = " << m_baseProjectPath << endl;
     out<< "JobID = " << id << endl;
     out<< "StartingStage = Transcode" << endl;
-    out<< "Quantity = 1";
+    out<< "Quantity = 1" << endl;
     out<< "Title = " << title << endl;
     out<< "Subtitle = " << subtitle << endl;
     out<< "Date = " << QDateTime::currentDateTime().toString() << endl;

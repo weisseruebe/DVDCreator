@@ -26,7 +26,7 @@ class DVDCreator : public QObject
 
 public:
     explicit DVDCreator(QString watchfolder, QString avsFolder, QString baseProject, QString menuTheme, QObject *parent = 0);
-    void startDVDJob(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString, QString> variables);
+    void startDVDJob(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString, QString> variables, int quantity=1);
 
 signals:
     void running(QString id);

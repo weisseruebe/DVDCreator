@@ -23,7 +23,7 @@ DVDCreator::DVDCreator(QString watchfolder, QString avsFolder, QString baseProje
 }
 
 
-void DVDCreator::startDVDJob(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString,QString> variables){
+void DVDCreator::startDVDJob(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString,QString> variables, int quantity){
     m_jobFileName = id;
     QFile file(m_watchfolder+m_jobFileName+".txt");
 
@@ -32,7 +32,7 @@ void DVDCreator::startDVDJob(QString id, QString title, QString subtitle, QList<
     out<< "JobTemplate = " << m_baseProjectPath << endl;
     out<< "JobID = " << id << endl;
     out<< "StartingStage = Transcode" << endl;
-    out<< "Quantity = 1" << endl;
+    out<< "Quantity = "<< QString::number(quantity) << endl;
     out<< "Title = " << title << endl;
     out<< "Subtitle = " << subtitle << endl;
     out<< "Date = " << QDateTime::currentDateTime().toString() << endl;

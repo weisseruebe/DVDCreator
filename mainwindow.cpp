@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    creator = new DVDCreator("D:/RocketDVD/watchfolder/","D:/RocketDVD/tmp/", "D:/RocketDVD/mwa.prj","D:/RocketDVD/menus/filmarchiv.menu");
+    creator = new DVDCreator("D:/RocketDVD/watchfolder/","D:/RocketDVD/tmp/", "D:/RocketDVD/templateBurnPrint.prj","D:/RocketDVD/menus/filmarchiv.menu");
     connect(creator,SIGNAL(running(QString)),this,SLOT(showRunning(QString)));
     connect(creator,SIGNAL(done(QString)),this,SLOT(showDone(QString)));
     connect(creator,SIGNAL(error(QString)),this,SLOT(showError(QString)));
@@ -39,7 +39,7 @@ void MainWindow::on_pushButtonStart_clicked()
     }
 
     //TODO: Set title and subtitle for the DVD
-    creator->startDVDJob(ui->lineEdit->text(),"Title","Subtitle",videoFiles,parameters);
+    creator->startDVDJob(ui->lineEdit->text(),"Title","Subtitle",videoFiles,parameters,3);
 }
 
 void MainWindow::on_pushButtonChooseAvi_clicked()

@@ -29,7 +29,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     DVDCreator* creator;
-    QString fileName;
+    QStringList fileNames;
 };
 
 #endif // MAINWINDOW_H

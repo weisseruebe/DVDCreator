@@ -9,10 +9,14 @@ class VideoFile //: public QObject
    // Q_OBJECT
 
 public:
-    explicit VideoFile(QString path, QString name, QTime length);
+    VideoFile(QString path, QString name, QTime length, bool changeFps, bool resize, bool crop);
+    VideoFile(QString path, QString name, QTime length);
     QString m_path;
     QString m_name;
     QTime m_length;
+    bool m_changeFps;
+    bool m_crop;
+    bool m_resize;
 
     
 //signals:

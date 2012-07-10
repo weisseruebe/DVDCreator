@@ -33,10 +33,11 @@ void MainWindow::on_pushButton_clicked()
     parameters.insert("[[Company Website]]", "www.mwa.com");
     parameters.insert("[[Company Telephone Number]]", "(030)123456");
 
-    VideoFile v(fileName,"Holla",QTime(1,0));
     QList<VideoFile> videoFiles;
-    videoFiles<<v;
-    videoFiles<<VideoFile("D:\\RocketDVD\\Untitled 03.avi","Nummer 5",QTime(0,1,0));
+
+    foreach(QString fileName,fileNames){
+        videoFiles<<VideoFile(fileName,"Holla",QTime(0,1,0));
+    }
     creator->startDVDJob(ui->lineEdit->text(),"Ausflug","Süden",videoFiles,parameters);
 }
 
@@ -57,8 +58,8 @@ void MainWindow::showError(QString msg){
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    fileName = QFileDialog::getOpenFileName(this, tr("Open AVI"), "/", tr("AVI Files (*.avi)"));
-    ui->labelAviFile->setText(fileName);
+    fileNames = QFileDialog::getOpenFileNames(this, tr("Open AVI"), "/", tr("AVI Files (*.avi)"));
+    ui->labelAviFile->setText(fileNames[0]);
     ui->pushButton->setEnabled(true);
 }
 

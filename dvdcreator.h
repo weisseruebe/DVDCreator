@@ -27,7 +27,7 @@ public slots:
 
 private:
     void createJobFile(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString, QString> variables);
-    void createAviSynthFile(QString avsFileName, QString videofile, bool resize, bool crop, bool changeFps);
+    void createAviSynthFile(QString avsFileName, VideoFile videofile);
 
     QString watchfolder;
     QString baseProjectPath;

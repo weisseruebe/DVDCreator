@@ -56,25 +56,24 @@ void DVDCreator::createJobFile(QString id, QString title, QString subtitle, QLis
     int j = 0;
     foreach(VideoFile videoFile,videoFiles){
         QString avsFileName = avsFolder+id+QString::number(j++)+".avs";
-        createAviSynthFile(avsFileName,videoFile.m_path,true,true,true);
+        createAviSynthFile(avsFileName,videoFile);
         out<<"Pre-CapturedFile=VIDEO:"<<avsFileName<<",LENGTH:"<<videoFile.m_length.toString("h:m:s")<<",TITLE:"<<videoFile.m_name<<endl;
     }
     file.close();
 }
 
-void DVDCreator::createAviSynthFile(QString avsFileName, QString videofile, bool resize = true, bool crop = false, bool changeFps = true){
-    qDebug() << "File "<<avsFileName;
+void DVDCreator::createAviSynthFile(QString avsFileName, VideoFile videofile){
     QFile file(avsFileName);
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)){
         QTextStream out(&file);
-        out<<"DirectShowSource(\""<<videofile<<"\")" << endl;
-        if (changeFps){
+        out<<"DirectShowSource(\""<<videofile.m_path<<"\")" << endl;
+        if (videofile.m_changeFps){
             out<<"AssumeFPS(25)"<<endl;
         }
-        if (crop){
+        if (videofile.m_crop){
             out << "Crop(160, 0, 960, 720)" << endl;
         }
-        if (resize){
+        if (videofile.m_resize){
             out<<"LanczosResize(720, 576)" << endl;
         }
         file.close();

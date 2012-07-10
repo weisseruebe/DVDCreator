@@ -39,7 +39,7 @@ void MainWindow::on_pushButtonStart_clicked()
     }
 
     //TODO: Set title and subtitle for the DVD
-    creator->startDVDJob(ui->lineEdit->text(),"Title","Subtitle",videoFiles,parameters,3);
+    creator->startDVDJob(ui->lineEdit->text(),"Title","Subtitle",videoFiles,parameters,1);
 }
 
 void MainWindow::on_pushButtonChooseAvi_clicked()

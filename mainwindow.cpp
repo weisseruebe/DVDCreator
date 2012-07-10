@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    creator = new DVDCreator();
+    creator = new DVDCreator("D:/RocketDVD/watchfolder/","D:\\RocketDVD\\", "D:/RocketDVD/test.prj","C:/Programme/Digital Media Applications/RocketDVD Professional Trial/Menu/CORPORATE - insert your own titles_PAL_MWA.menu");
     connect(creator,SIGNAL(running(QString)),this,SLOT(showRunning(QString)));
     connect(creator,SIGNAL(done(QString)),this,SLOT(showDone(QString)));
     connect(creator,SIGNAL(error(QString)),this,SLOT(showError(QString)));

@@ -8,19 +8,9 @@
 #include <QHash>
 #include "dvdcreator.h"
 
-DVDCreator::DVDCreator(QObject *parent) :
-    QObject(parent)
+DVDCreator::DVDCreator(QString watchfolder, QString avsFolder, QString baseProject, QString menuTheme, QObject *parent) :
+    QObject(parent),m_watchfolder(watchfolder),m_avsFolder(avsFolder),m_baseProjectPath(baseProject),m_menuTheme(menuTheme),m_jobFileName("out")
 {
-    /* The folder that is set as watchfolder in RocketDVD*/
-    watchfolder = "D:/RocketDVD/watchfolder/";
-
-    /*The path and name of the avisynth skript*/
-    avsFolder = "D:\\RocketDVD\\";
-
-    baseProjectPath = "D:/RocketDVD/test.prj";
-    menuTheme = "C:/Programme/Digital Media Applications/RocketDVD Professional Trial/Menu/CORPORATE - insert your own titles_PAL_MWA.menu";
-    jobFileName = "out";
-
     watchFolderWatcher = new QFileSystemWatcher(this);
     watchFolderWatcher->addPath(watchfolder);
 
@@ -31,12 +21,12 @@ DVDCreator::DVDCreator(QObject *parent) :
 
 
 void DVDCreator::createJobFile(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString,QString> variables){
-    jobFileName = id;
-    QFile file(watchfolder+jobFileName+".txt");
+    m_jobFileName = id;
+    QFile file(m_watchfolder+m_jobFileName+".txt");
 
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
-    out<<"JobTemplate = "<<baseProjectPath<<endl;
+    out<<"JobTemplate = "<<m_baseProjectPath<<endl;
     out<<"JobID = "<<id<<endl;
     out<<"StartingStage = Transcode" << endl;
 
@@ -49,13 +39,13 @@ void DVDCreator::createJobFile(QString id, QString title, QString subtitle, QLis
         i.next();
         out<<"Variable = " << i.key() << "," << i.value()<<endl;
     }
-    out<<"MenuTheme="<<menuTheme<<endl;
+    out<<"MenuTheme="<<m_menuTheme<<endl;
     out<<"UsePre-EncodedFiles=yes"<<endl;
     out<<"Pre-EncodedFileType = FilesToEncode"<<endl;
 
     int j = 0;
     foreach(VideoFile videoFile,videoFiles){
-        QString avsFileName = avsFolder+id+QString::number(j++)+".avs";
+        QString avsFileName = m_avsFolder+id+QString::number(j++)+".avs";
         createAviSynthFile(avsFileName,videoFile);
         out<<"Pre-CapturedFile=VIDEO:"<<avsFileName<<",LENGTH:"<<videoFile.m_length.toString("h:m:s")<<",TITLE:"<<videoFile.m_name<<endl;
     }
@@ -81,16 +71,16 @@ void DVDCreator::createAviSynthFile(QString avsFileName, VideoFile videofile){
 }
 
 
-void DVDCreator::setMenuFile(QString path){
-    menuTheme = path;
+void DVDCreator::setMenuFile(QString menuThemePath){
+    m_menuTheme = menuThemePath;
 }
 
 void DVDCreator::handleFileChanges(QString path){
-    if (QFile(path+jobFileName+".running").exists()){
-        emit running(jobFileName);
+    if (QFile(path+m_jobFileName+".running").exists()){
+        emit running(m_jobFileName);
     }
-    if (QFile(path+jobFileName+".err").exists()){
-        QFile file(path+jobFileName+".err");
+    if (QFile(path+m_jobFileName+".err").exists()){
+        QFile file(path+m_jobFileName+".err");
         QString errorMessage;
         if (file.open(QIODevice::ReadOnly | QIODevice::Text)){
             QTextStream in(&file);
@@ -104,8 +94,8 @@ void DVDCreator::handleFileChanges(QString path){
             emit error(errorMessage);
         }
     }
-    if (QFile(path+jobFileName+".done").exists()){
-        emit done(jobFileName);
+    if (QFile(path+m_jobFileName+".done").exists()){
+        emit done(m_jobFileName);
     }
 }
 

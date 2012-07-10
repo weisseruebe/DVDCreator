@@ -33,7 +33,10 @@ void MainWindow::on_pushButton_clicked()
     parameters.insert("[[Company Website]]", "www.mwa.com");
     parameters.insert("[[Company Telephone Number]]", "(030)123456");
 
-    creator->startDVDJob(ui->lineEdit->text(),"Ausflug","Süden",fileName,QTime(0,1), parameters);
+    VideoFile v(fileName,"Holla",QTime(1,0));
+    QList<VideoFile> videoFiles;
+    videoFiles<<v;
+    creator->startDVDJob(ui->lineEdit->text(),"Ausflug","Süden",videoFiles,parameters);
 }
 
 void MainWindow::showRunning(QString id){

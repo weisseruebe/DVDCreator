@@ -14,7 +14,7 @@ class DVDCreator : public QObject
 
 public:
     explicit DVDCreator(QObject *parent = 0);
-    void startDVDJob(QString id, QString title, QString subtitle, QString videoFile, QTime length, QHash<QString, QString> parameters);
+    void startDVDJob(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString, QString> parameters);
 
 signals:
     void running(QString id);
@@ -26,12 +26,12 @@ public slots:
     void setMenuFile(QString path);
 
 private:
-    void createJobFile(QString id, QString title, QString subtitle, QTime length, QHash<QString, QString> variables);
-    void createAviSynthFile(QString videofile, bool resize, bool crop, bool changeFps);
+    void createJobFile(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString, QString> variables);
+    void createAviSynthFile(QString avsFileName, QString videofile, bool resize, bool crop, bool changeFps);
 
     QString watchfolder;
     QString baseProjectPath;
-    QString avsPath;
+    QString avsFolder;
     QString menuTheme;
     QString jobFileName;
     QFileSystemWatcher* watchFolderWatcher;

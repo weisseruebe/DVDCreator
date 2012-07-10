@@ -11,8 +11,12 @@
 DVDCreator::DVDCreator(QObject *parent) :
     QObject(parent)
 {
+    /* The folder that is set as watchfolder in RocketDVD*/
     watchfolder = "D:/RocketDVD/watchfolder/";
-    avsPath = "D:\\RocketDVD\\direct.avs";
+
+    /*The path and name of the avisynth skript*/
+    avsFolder = "D:\\RocketDVD\\";
+
     baseProjectPath = "D:/RocketDVD/test.prj";
     menuTheme = "C:/Programme/Digital Media Applications/RocketDVD Professional Trial/Menu/CORPORATE - insert your own titles_PAL_MWA.menu";
     jobFileName = "out";
@@ -26,9 +30,10 @@ DVDCreator::DVDCreator(QObject *parent) :
 }
 
 
-void DVDCreator::createJobFile(QString id, QString title, QString subtitle, QTime length, QHash<QString,QString> variables){
+void DVDCreator::createJobFile(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString,QString> variables){
     jobFileName = id;
     QFile file(watchfolder+jobFileName+".txt");
+
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
     out<<"JobTemplate = "<<baseProjectPath<<endl;
@@ -47,26 +52,33 @@ void DVDCreator::createJobFile(QString id, QString title, QString subtitle, QTim
     out<<"MenuTheme="<<menuTheme<<endl;
     out<<"UsePre-EncodedFiles=yes"<<endl;
     out<<"Pre-EncodedFileType = FilesToEncode"<<endl;
-    out<<"Pre-CapturedFile=VIDEO:"<<avsPath<<",LENGTH:"<<length.toString("h:m:s")<<",TITLE:Demo"<<endl;
 
+    int j = 0;
+    foreach(VideoFile videoFile,videoFiles){
+        QString avsFileName = avsFolder+id+QString::number(j)+".avs";
+        createAviSynthFile(avsFileName,videoFile.m_path,true,true,true);
+        out<<"Pre-CapturedFile=VIDEO:"<<avsFileName<<",LENGTH:"<<videoFile.m_length.toString("h:m:s")<<",TITLE:"<<videoFile.m_name<<endl;
+    }
     file.close();
 }
 
-void DVDCreator::createAviSynthFile(QString videofile, bool resize = true, bool crop = false, bool changeFps = true){
-    QFile file(avsPath);
-    file.open(QIODevice::WriteOnly | QIODevice::Text);
-    QTextStream out(&file);
-    out<<"DirectShowSource(\""<<videofile<<"\")" << endl;
-    if (changeFps){
-        out<<"AssumeFPS(25)"<<endl;
+void DVDCreator::createAviSynthFile(QString avsFileName, QString videofile, bool resize = true, bool crop = false, bool changeFps = true){
+    qDebug() << "File "<<avsFileName;
+    QFile file(avsFileName);
+    if (file.open(QIODevice::WriteOnly | QIODevice::Text)){
+        QTextStream out(&file);
+        out<<"DirectShowSource(\""<<videofile<<"\")" << endl;
+        if (changeFps){
+            out<<"AssumeFPS(25)"<<endl;
+        }
+        if (crop){
+            out << "Crop(160, 0, 960, 720)" << endl;
+        }
+        if (resize){
+            out<<"LanczosResize(720, 576)" << endl;
+        }
+        file.close();
     }
-    if (crop){
-        out << "Crop(160, 0, 960, 720)" << endl;
-    }
-    if (resize){
-        out<<"LanczosResize(720, 576)" << endl;
-    }
-    file.close();
 }
 
 
@@ -98,7 +110,6 @@ void DVDCreator::handleFileChanges(QString path){
     }
 }
 
-void DVDCreator::startDVDJob(QString id, QString title, QString subtitle, QString videoFile, QTime length, QHash<QString, QString> parameters){
-    createAviSynthFile(videoFile);
-    createJobFile(id, title, subtitle, length, parameters);
+void DVDCreator::startDVDJob(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString, QString> parameters){
+    createJobFile(id, title, subtitle, videoFiles, parameters);
 }

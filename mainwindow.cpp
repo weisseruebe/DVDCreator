@@ -2,7 +2,6 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "dvdcreator.h"
@@ -13,12 +12,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    creator = new DVDCreator("D:/RocketDVD/watchfolder/","D:\\RocketDVD\\", "D:/RocketDVD/test.prj","C:/Programme/Digital Media Applications/RocketDVD Professional Trial/Menu/CORPORATE - insert your own titles_PAL_MWA.menu");
+    creator = new DVDCreator("D:/RocketDVD/watchfolder/","D:\\RocketDVD\\", "D:/RocketDVD/mwa.prj","C:/Programme/Digital Media Applications/RocketDVD Professional Trial/Menu/CORPORATE - insert your own titles_PAL_MWA.menu");
     connect(creator,SIGNAL(running(QString)),this,SLOT(showRunning(QString)));
     connect(creator,SIGNAL(done(QString)),this,SLOT(showDone(QString)));
     connect(creator,SIGNAL(error(QString)),this,SLOT(showError(QString)));
     ui->pushButton->setEnabled(false);
-
 }
 
 MainWindow::~MainWindow()
@@ -38,7 +36,7 @@ void MainWindow::on_pushButton_clicked()
     foreach(QString fileName,fileNames){
         videoFiles<<VideoFile(fileName,"Holla",QTime(0,1,0));
     }
-    creator->startDVDJob(ui->lineEdit->text(),"Ausflug","Süden",videoFiles,parameters);
+    creator->startDVDJob(ui->lineEdit->text(),"Ausflug","Sueden",videoFiles,parameters);
 }
 
 void MainWindow::showRunning(QString id){

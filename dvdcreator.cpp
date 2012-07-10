@@ -16,38 +16,37 @@ DVDCreator::DVDCreator(QString watchfolder, QString avsFolder, QString baseProje
 
     connect(watchFolderWatcher,SIGNAL(fileChanged(QString)),this,SLOT(handleFileChanges(QString)));
     connect(watchFolderWatcher,SIGNAL(directoryChanged(QString)),this,SLOT(handleFileChanges(QString)));
-
 }
 
 
-void DVDCreator::createJobFile(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString,QString> variables){
+void DVDCreator::startDVDJob(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString,QString> variables){
     m_jobFileName = id;
     QFile file(m_watchfolder+m_jobFileName+".txt");
 
     file.open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(&file);
-    out<<"JobTemplate = "<<m_baseProjectPath<<endl;
-    out<<"JobID = "<<id<<endl;
-    out<<"StartingStage = Transcode" << endl;
-
-    out<<"Title = "<<title<<endl;
-    out<<"Subtitle = "<<subtitle<<endl;
-    out<<"Date = "<<QDateTime::currentDateTime().toString()<<endl;
+    out<< "JobTemplate = " << m_baseProjectPath << endl;
+    out<< "JobID = " << id << endl;
+    out<< "StartingStage = Transcode" << endl;
+    out<< "Quantity = 1";
+    out<< "Title = " << title << endl;
+    out<< "Subtitle = " << subtitle << endl;
+    out<< "Date = " << QDateTime::currentDateTime().toString() << endl;
 
     QHashIterator<QString, QString> i(variables);
     while (i.hasNext()) {
         i.next();
         out<<"Variable = " << i.key() << "," << i.value()<<endl;
     }
-    out<<"MenuTheme="<<m_menuTheme<<endl;
-    out<<"UsePre-EncodedFiles=yes"<<endl;
-    out<<"Pre-EncodedFileType = FilesToEncode"<<endl;
+    out<< "MenuTheme=" << m_menuTheme << endl;
+    out<< "UsePre-EncodedFiles=yes" << endl;
+    out<< "Pre-EncodedFileType = FilesToEncode" << endl;
 
     int j = 0;
     foreach(VideoFile videoFile,videoFiles){
         QString avsFileName = m_avsFolder+id+QString::number(j++)+".avs";
         createAviSynthFile(avsFileName,videoFile);
-        out<<"Pre-CapturedFile=VIDEO:"<<avsFileName<<",LENGTH:"<<videoFile.m_length.toString("h:m:s")<<",TITLE:"<<videoFile.m_name<<endl;
+        out << "Pre-CapturedFile=VIDEO:" << avsFileName << ",LENGTH:" << videoFile.m_length.toString("h:m:s") << ",TITLE:" <<  videoFile.m_name << endl;
     }
     file.close();
 }
@@ -99,6 +98,3 @@ void DVDCreator::handleFileChanges(QString path){
     }
 }
 
-void DVDCreator::startDVDJob(QString id, QString title, QString subtitle, QList<VideoFile> videoFiles, QHash<QString, QString> parameters){
-    createJobFile(id, title, subtitle, videoFiles, parameters);
-}

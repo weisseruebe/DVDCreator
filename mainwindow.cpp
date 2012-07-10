@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(creator,SIGNAL(running(QString)),this,SLOT(showRunning(QString)));
     connect(creator,SIGNAL(done(QString)),this,SLOT(showDone(QString)));
     connect(creator,SIGNAL(error(QString)),this,SLOT(showError(QString)));
-    ui->pushButton->setEnabled(false);
+    ui->pushButtonStart->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -24,19 +24,36 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_pushButtonStart_clicked()
 {
+    //TODO: Fill parameters with data
     QHash<QString,QString> parameters;
     parameters.insert("[[Company Name]]", "MWA");
     parameters.insert("[[Company Website]]", "www.mwa.com");
     parameters.insert("[[Company Telephone Number]]", "(030)123456");
 
+    //TODO: Add a title to all video clips (e.g. Project or Reel name)
     QList<VideoFile> videoFiles;
-
     foreach(QString fileName,fileNames){
-        videoFiles<<VideoFile(fileName,"Holla",QTime(0,1,0));
+        videoFiles<<VideoFile(fileName,"Title",QTime(0,1,0));
     }
-    creator->startDVDJob(ui->lineEdit->text(),"Ausflug","Sueden",videoFiles,parameters);
+
+    //TODO: Set title and subtitle for the DVD
+    creator->startDVDJob(ui->lineEdit->text(),"Title","Subtitle",videoFiles,parameters);
+}
+
+void MainWindow::on_pushButtonChooseAvi_clicked()
+{
+    fileNames = QFileDialog::getOpenFileNames(this, tr("Open AVI"), "/", tr("AVI Files (*.avi)"));
+    ui->labelAviFile->setText(fileNames[0]);
+    ui->pushButtonStart->setEnabled(true);
+}
+
+void MainWindow::on_pushButtonChooseMenu_clicked()
+{
+    QString menufile = QFileDialog::getOpenFileName(this, tr("Open Menu"), "/", tr("Menu Files (*.menu)"));
+    ui->labelMenu->setText(menufile);
+    creator->setMenuFile(menufile);
 }
 
 void MainWindow::showRunning(QString id){
@@ -54,16 +71,3 @@ void MainWindow::showError(QString msg){
     msgBox.exec();
 }
 
-void MainWindow::on_pushButton_2_clicked()
-{
-    fileNames = QFileDialog::getOpenFileNames(this, tr("Open AVI"), "/", tr("AVI Files (*.avi)"));
-    ui->labelAviFile->setText(fileNames[0]);
-    ui->pushButton->setEnabled(true);
-}
-
-void MainWindow::on_pushButtonMenu_clicked()
-{
-    QString menufile = QFileDialog::getOpenFileName(this, tr("Open Menu"), "/", tr("Menu Files (*.menu)"));
-    ui->labelMenu->setText(menufile);
-    creator->setMenuFile(menufile);
-}

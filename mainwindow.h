@@ -1,3 +1,9 @@
+/*!
+  ** \file mainwindow.h
+  ** \date July 2012
+  ** \author Andreas Rettig
+  ***************************************************/
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -8,6 +14,10 @@ namespace Ui {
     class MainWindow;
 }
 
+/*!
+  ** A very simple example implementation of the dvdcreator class
+  **
+  *******************************************************************/
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -17,14 +27,14 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
-    void on_pushButton_2_clicked();
+    void on_pushButtonStart_clicked();
+    void on_pushButtonChooseAvi_clicked();
+    void on_pushButtonChooseMenu_clicked();
 
     void showRunning(QString id);
     void showDone(QString id);
     void showError(QString msg);
 
-    void on_pushButtonMenu_clicked();
 
 private:
     Ui::MainWindow *ui;

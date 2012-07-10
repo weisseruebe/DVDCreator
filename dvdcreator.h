@@ -1,3 +1,9 @@
+/*!
+  ** \file dvdcreator.h
+  ** \date July 2012
+  ** \author Andreas Rettig
+  ***************************************************/
+
 #ifndef DVDCREATOR_H
 #define DVDCREATOR_H
 
@@ -7,6 +13,12 @@
 #include <QHash>
 
 #include "videofile.h"
+
+/*!
+  ** Creates Job Files for RocketDVD (http://www.dmapp.com) that allows automated
+  ** DVD encoding and authoring.
+  **
+  ************************************************/
 
 class DVDCreator : public QObject
 {

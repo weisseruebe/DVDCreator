@@ -1,12 +1,21 @@
+/*!
+  ** \file videofile.h
+  ** \date July 2012
+  ** \author Andreas Rettig
+  ***************************************************/
+
 #ifndef VIDEOFILE_H
 #define VIDEOFILE_H
 
-//#include <QObject>
 #include <QTime>
 
-class VideoFile //: public QObject
+/*!
+  ** A very simple container class for a videoFile and the needed metadata for authoring
+  **
+  *****************************************************************************************/
+
+class VideoFile
 {
-   // Q_OBJECT
 
 public:
     VideoFile(QString path, QString name, QTime length, bool changeFps, bool resize, bool crop);
@@ -17,11 +26,6 @@ public:
     bool m_changeFps;
     bool m_crop;
     bool m_resize;
-
-    
-//signals:
-    
-//public slots:
     
 };
 

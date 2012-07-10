@@ -36,6 +36,7 @@ void MainWindow::on_pushButton_clicked()
     VideoFile v(fileName,"Holla",QTime(1,0));
     QList<VideoFile> videoFiles;
     videoFiles<<v;
+    videoFiles<<VideoFile("D:\\RocketDVD\\Untitled 03.avi","Nummer 5",QTime(0,1,0));
     creator->startDVDJob(ui->lineEdit->text(),"Ausflug","Süden",videoFiles,parameters);
 }
 

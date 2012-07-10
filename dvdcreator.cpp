@@ -55,7 +55,7 @@ void DVDCreator::createJobFile(QString id, QString title, QString subtitle, QLis
 
     int j = 0;
     foreach(VideoFile videoFile,videoFiles){
-        QString avsFileName = avsFolder+id+QString::number(j)+".avs";
+        QString avsFileName = avsFolder+id+QString::number(j++)+".avs";
         createAviSynthFile(avsFileName,videoFile.m_path,true,true,true);
         out<<"Pre-CapturedFile=VIDEO:"<<avsFileName<<",LENGTH:"<<videoFile.m_length.toString("h:m:s")<<",TITLE:"<<videoFile.m_name<<endl;
     }

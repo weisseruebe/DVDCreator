@@ -60,9 +60,13 @@ void DVDCreator::createAviSynthFile(QString avsFileName, VideoFile videofile){
     if (file.open(QIODevice::WriteOnly | QIODevice::Text)){
         QTextStream out(&file);
         out<<"DirectShowSource(\""<<videofile.m_path<<"\")" << endl;
-        if (videofile.m_changeFps){
-            out<<"AssumeFPS(25)"<<endl;
+
+        out<<"AssumeFPS("<<videofile.m_sourceFps<<")"<<endl;
+
+        if (videofile.m_sourceFps!=25){
+            out<<"ConvertFPS(25)"<<endl;
         }
+
         if (videofile.m_crop){
             out << "Crop(160, 0, 960, 720)" << endl;
         }

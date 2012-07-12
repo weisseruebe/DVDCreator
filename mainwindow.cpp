@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    creator = new DVDCreator("D:/RocketDVD/watchfolder/","D:/RocketDVD/tmp/", "D:/RocketDVD/templateBurnPrint.prj","D:/RocketDVD/menus/filmarchiv.menu");
+    creator = new DVDCreator("D:/RocketDVD/watchfolder/","D:/RocketDVD/tmp/", "D:/RocketDVD/template.prj","D:/RocketDVD/menus/filmarchiv.menu");
     connect(creator,SIGNAL(running(QString)),this,SLOT(showRunning(QString)));
     connect(creator,SIGNAL(done(QString)),this,SLOT(showDone(QString)));
     connect(creator,SIGNAL(error(QString)),this,SLOT(showError(QString)));
@@ -35,7 +35,7 @@ void MainWindow::on_pushButtonStart_clicked()
     //TODO: Add a title to all video clips (e.g. Project or Reel name)
     QList<VideoFile> videoFiles;
     foreach(QString fileName,fileNames){
-        videoFiles<<VideoFile(fileName,"Title",QTime(0,1,0));
+        videoFiles<<VideoFile(fileName,"Title",QTime(0,1,0),50,true,false);
     }
 
     //TODO: Set title and subtitle for the DVD
